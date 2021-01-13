@@ -1,0 +1,28 @@
+.wrapper {
+  margin-top: 4rem;
+}
+
+.date {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.text_full_date {
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+
+.tasks {
+  width: 40vw;
+  margin: 0 auto;
+}
+
+.task_header {
+  text-align: center;
+  width: 100%;
+  font-family: 'Bebas Neue';
+  font-size: 3rem;
+  line-height: 3.625rem;
+  letter-spacing: 0.25rem;
+  color: #2d2d2d;
+}

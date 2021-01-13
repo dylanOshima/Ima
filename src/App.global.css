@@ -1,74 +1,66 @@
 /*
- * @NOTE: Prepend a `~` to css file paths that are in your node_modules
- *        See https://github.com/webpack-contrib/sass-loader#imports
- */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
+  Two major screens: large and task list
+
+  Fonts:
+    > font-family: 'Bebas Neue', cursive;
+    > font-family: 'Merriweather', serif;
+*/
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Merriweather:wght@300;400&display=swap');
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  font-family: 'Merriweather', serif;
+  font-size: 16px;
+}
 
 body {
-  position: relative;
-  color: white;
-  height: 100vh;
-  background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
-  );
-  font-family: 'Noto Sans JP', sans-serif;
-  overflow-y: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-width: 600px;
 }
 
+/* Used to display the day */
 h2 {
-  margin: 0;
-  font-size: 2.25rem;
-  font-weight: bold;
-  letter-spacing: -0.025em;
-  color: #fff;
+  margin: 1rem;
+  font-family: 'Bebas Neue';
+  font-size: 6rem;
+  line-height: 7.1875rem;
+  letter-spacing: 1rem;
+  text-shadow: 0px 6px 5px rgba(0, 0, 0, 0.25);
 }
 
-button {
-  background-color: white;
-  padding: 10px 20px;
-  margin: 10px;
-  border-radius: 10px;
-  border: none;
-  appearance: none;
-  font-size: 1.3rem;
-  box-shadow: 0px 8px 28px -6px rgba(24, 39, 75, 0.12),
-    0px 18px 88px -4px rgba(24, 39, 75, 0.14);
-  transition: transform ease-in 0.1s;
+.header {
+  width: 100vw;
+  position: fixed;
+  top: 3.5rem;
 }
 
-button:hover {
-  transform: scale(1.1);
-}
-
-p {
-  font-size: 24px;
-}
-
-li {
-  list-style: none;
-}
-
-a {
+.logo {
+  font-size: 2rem;
   color: white;
-  opacity: 0.75;
-  text-decoration: none;
+  background-color: black;
+  border-radius: 10px;
+  margin-left: 3.7rem;
+  padding: 0.4rem 0.8rem;
 }
 
-a:hover {
-  opacity: 1;
-  text-decoration: none;
-  cursor: pointer;
+.menu {
+  font-size: 2rem;
+  text-decoration-line: underline;
+  float: right;
+  margin-right: 3.7rem;
+  padding: 0.2rem 0.8rem;
 }
 
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
+.menu:hover {
+  color: white;
+  border-radius: 10px;
+  background-color: #2d2d2d;
+}
+
+/* UTILITY CLASSES */
+.center {
+  margin-left: 4.2rem;
+  margin-right: 4.2rem;
 }
