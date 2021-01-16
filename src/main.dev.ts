@@ -73,6 +73,7 @@ const createWindow = async () => {
     height: 1024,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      // TODO: https://stackoverflow.com/questions/48854265/why-do-i-see-an-electron-security-warning-after-updating-my-electron-project-t
       nodeIntegration: true,
     },
   });
