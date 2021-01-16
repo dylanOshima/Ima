@@ -1,6 +1,31 @@
 import React from 'react';
+import Task from './Task';
 
 const style = require('./Tasks.css').default;
+
+const DATA = [
+  {
+    taskName: 'Finish figma mockups',
+    taskDescription: 'A really sexy task',
+    finished: false,
+    taskLinks: [],
+    subtasks: [],
+  },
+  {
+    taskName: 'Create persistant storage',
+    taskDescription: 'A really sexy task',
+    finished: false,
+    taskLinks: [],
+    subtasks: [],
+  },
+  {
+    taskName: 'Turn these into react components',
+    taskDescription: 'A really sexy task',
+    finished: true,
+    taskLinks: [],
+    subtasks: [],
+  },
+];
 
 function Tasks() {
   return (
@@ -11,11 +36,11 @@ function Tasks() {
       </div>
       <div className={style.tasks}>
         <div className={style.task_header}>Today's Tasks:</div>
-        <ul>
-          <li>Finish figma mockups</li>
-          <li>Create persistant storage</li>
-          <li>Turn these into react components</li>
-        </ul>
+        <div className={style.task_list}>
+          {DATA.map((task) => (
+            <Task key={task.taskName} {...task} />
+          ))}
+        </div>
       </div>
     </div>
   );
