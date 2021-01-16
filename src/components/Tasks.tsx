@@ -29,18 +29,12 @@ const DATA = [
 
 function Tasks() {
   return (
-    <div className={`${style.wrapper} center`}>
-      <div className={style.date}>
-        <div className={style.text_full_date}>January 13th, 2021</div>
-        <h2>Wednesday</h2>
-      </div>
-      <div className={style.tasks}>
-        <div className={style.task_header}>Today's Tasks:</div>
-        <div className={style.task_list}>
-          {DATA.map((task) => (
-            <Task key={task.taskName} {...task} />
-          ))}
-        </div>
+    <div className={style.tasks}>
+      <div className={style.task_header}>Today's Tasks:</div>
+      <div className={style.task_list}>
+        {DATA.map((task) => (
+          <Task key={task.taskName} {...task} />
+        ))}
       </div>
     </div>
   );

@@ -14,9 +14,11 @@ body {
   background: #ffffff;
   font-family: 'Merriweather', serif;
   font-size: 16px;
+  width: 100%;
+  height: 100%;
 }
 
-body {
+.root {
   min-width: 600px;
 }
 
@@ -36,27 +38,32 @@ h2 {
   top: 3.5rem;
 }
 
-.logo {
-  font-size: 2rem;
+.logo,
+.menu {
   color: white;
-  background-color: black;
+  border: 1px solid #2d2d2d;
   border-radius: 10px;
+  background-color: #2d2d2d;
+  text-decoration: none;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.menu:hover,
+.logo:hover {
+  background-color: #5c5c5c;
+}
+
+.logo {
   margin-left: 3.7rem;
   padding: 0.4rem 0.8rem;
+  font-size: 2rem;
 }
 
 .menu {
-  font-size: 2rem;
-  text-decoration-line: underline;
   float: right;
   margin-right: 3.7rem;
   padding: 0.2rem 0.8rem;
-}
-
-.menu:hover {
-  color: white;
-  border-radius: 10px;
-  background-color: #2d2d2d;
+  font-size: 1.75rem;
 }
 
 /* UTILITY CLASSES */

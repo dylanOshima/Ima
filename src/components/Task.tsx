@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 
 const style = require('./Task.css').default;
 
@@ -19,18 +18,20 @@ type TaskType = {
  */
 function Task(props: TaskType) {
   const { taskName, taskDescription, finished } = props;
-  const [checked, setChecked] = useState(finished);
 
   return (
-    <div className={style.task} onClick={() => setChecked(!checked)}>
-      <input
-        className={style.task_checkbox}
-        type="checkbox"
-        checked={checked}
-      />
-      <span>
-        {taskName} - {taskDescription}
-      </span>
+    <div className={style.task_wrapper}>
+      <a className={style.task} href="/">
+        <input
+          className={style.task_checkbox}
+          type="checkbox"
+          defaultChecked={finished}
+          readOnly
+        />
+        <span>
+          {taskName} - {taskDescription}
+        </span>
+      </a>
     </div>
   );
 }

@@ -1,6 +1,17 @@
 /* TASK */
-.task {
+.task_wrapper {
   margin: 1.125rem 0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+}
+
+.task_wrapper:hover {
+  background-color: #2d2d2d4f;
+}
+
+.task {
+  text-decoration: none;
+  color: #2d2d2d;
 }
 
 /* CHECKBOX STYLE */
