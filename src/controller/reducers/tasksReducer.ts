@@ -12,6 +12,16 @@ export type TaskType = {
   expectedTime?: number;
 };
 
+export const INITIAL_TASK_STATE = {
+  id: -1,
+  taskName: '',
+  taskDescription: '',
+  finished: false,
+  taskLinks: [],
+  subtasks: [],
+  value: 10,
+} as TaskType;
+
 type TaskPayload = {
   taskName: string;
   taskDescription: string;

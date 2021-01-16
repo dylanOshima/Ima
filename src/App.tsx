@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Tasks from './components/Tasks';
-import TasksCreation from './components/TaskCreation';
+import TasksCreation from './components/TaskView/TaskCreation';
 import TaskView from './components/TaskView';
 import { RootState } from './controller/rootReducer';
 import { setCurrentPage } from './controller/reducers/pagesReducer';
@@ -48,22 +48,24 @@ export default function App() {
   }, [page]);
 
   return (
-    <div className="header">
-      <button
-        type="button"
-        className="logo"
-        onClick={() => dispatch(setCurrentPage({ page: 'tasks' }))}
-      >
-        今
-      </button>
-      <button
-        type="button"
-        className="menu"
-        onClick={() => dispatch(setCurrentPage({ page: 'new_task' }))}
-      >
-        + Add Task
-      </button>
+    <>
+      <div className="header">
+        <button
+          type="button"
+          className="logo"
+          onClick={() => dispatch(setCurrentPage({ page: 'tasks' }))}
+        >
+          今
+        </button>
+        <button
+          type="button"
+          className="menu"
+          onClick={() => dispatch(setCurrentPage({ page: 'new_task' }))}
+        >
+          + Add Task
+        </button>
+      </div>
       <TodayWrapper>{currentPage()}</TodayWrapper>
-    </div>
+    </>
   );
 }

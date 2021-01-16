@@ -30,7 +30,6 @@ function Task({ id: taskId, taskName, taskDescription, finished }: TaskType) {
       onClick={() =>
         dispatch(setCurrentPage({ page: 'edit_task', currentTask: taskId }))
       }
-      onKeyDown={(e) => e.key === 'ArrowDown'}
     >
       <input
         className={style.task_checkbox}

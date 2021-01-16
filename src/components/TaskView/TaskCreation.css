@@ -1,0 +1,37 @@
+.title {
+  font-family: 'Bebas Neue';
+  font-weight: normal;
+  font-size: 4.5rem;
+  letter-spacing: 0.05rem;
+  color: #2d2d2d;
+  margin: 0.4rem;
+  padding-left: 0.4rem;
+  text-align: center;
+  border: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.title:focus {
+  /* TODO: Find a UX that makes this work for the visually impaired */
+  outline: none;
+  background-color: #e2e2e2;
+  border: 2px solid black;
+}
+
+.description {
+  margin: 0.5rem auto;
+  width: 50%;
+  height: 4rem;
+  background: #e2e2e2;
+  box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 7px;
+  padding: 0.5rem 0.8rem;
+}
+
+.title:focus {
+  border: none;
+  color: #2d2d2d;
+}
