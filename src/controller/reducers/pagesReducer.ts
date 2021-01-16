@@ -1,14 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type PageTypes = 'tasks' | 'new_task' | 'account';
+type PageTypes = 'tasks' | 'new_task' | 'edit_task' | 'account';
 
 interface CurrentPageState {
   page: PageTypes;
+  currentTask: number | null;
   accountId: number | null;
 }
 
 interface CurrentPagePayload {
   page: PageTypes;
+  currentTask?: number;
   accountId?: number;
 }
 
@@ -21,9 +23,15 @@ const currentPageSlice = createSlice({
   initialState,
   reducers: {
     setCurrentPage(state, action: PayloadAction<CurrentPagePayload>) {
-      const { page, accountId = null } = action.payload;
+      const { page, currentTask = null, accountId = null } = action.payload;
+      if (page === 'account' && accountId != null) {
+        state.accountId = accountId;
+        state.page = page;
+      } else if (page === 'edit_task' && currentTask != null) {
+        state.currentTask = currentTask;
+        state.page = page;
+      }
       state.page = page;
-      if (accountId != null) state.accountId = accountId;
     },
   },
 });

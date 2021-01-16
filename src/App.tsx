@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Tasks from './components/Tasks';
 import TasksCreation from './components/TaskCreation';
+import TaskView from './components/TaskView';
 import { RootState } from './controller/rootReducer';
 import { setCurrentPage } from './controller/reducers/pagesReducer';
 
@@ -34,6 +35,8 @@ export default function App() {
           return <Tasks />;
         case 'new_task':
           return <TasksCreation />;
+        case 'edit_task':
+          return <TaskView />;
         default: {
           // TODO: replace this with a loading state or an error state
           // eslint-disable-next-line no-console

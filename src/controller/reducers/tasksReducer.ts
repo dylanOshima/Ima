@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type TaskType = {
+export type TaskType = {
   id: number;
   taskName: string;
   taskDescription: string;

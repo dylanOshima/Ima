@@ -1,38 +1,19 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Task from './Task';
+import { RootState } from '../controller/rootReducer';
+import { TaskType } from '../controller/reducers/tasksReducer';
 
 const style = require('./Tasks.css').default;
 
-const DATA = [
-  {
-    taskName: 'Finish figma mockups',
-    taskDescription: 'A really sexy task',
-    finished: false,
-    taskLinks: [],
-    subtasks: [],
-  },
-  {
-    taskName: 'Create persistant storage',
-    taskDescription: 'A really sexy task',
-    finished: false,
-    taskLinks: [],
-    subtasks: [],
-  },
-  {
-    taskName: 'Turn these into react components',
-    taskDescription: 'A really sexy task',
-    finished: true,
-    taskLinks: [],
-    subtasks: [],
-  },
-];
-
 function Tasks() {
+  const tasks = useSelector((state: RootState) => state.tasks);
+
   return (
     <div className={style.tasks}>
       <div className={style.task_header}>Today's Tasks:</div>
       <div className={style.task_list}>
-        {DATA.map((task) => (
+        {tasks.map((task: TaskType) => (
           <Task key={task.taskName} {...task} />
         ))}
       </div>
