@@ -1,73 +1,73 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../controller/rootReducer';
+import CheckBox from './checkbox.svg';
+import CheckBoxChecked from './checkbox_checked.svg';
 
 const style = require('./TaskView.css').default;
 
 function TaskView() {
-  const { taskName } = useSelector((state: RootState) => {
+  const {
+    taskName,
+    taskDescription,
+    taskLinks,
+    subtasks,
+    value,
+    finished,
+    expectedTime,
+  } = useSelector((state: RootState) => {
     const { currentTask } = state.currentPage;
     return state.tasks[currentTask];
   });
 
-  const onSubmit = () => {
-    // TODO: This is for updating an existing task
-    // console.log("Hello, whatcha submittin' there?");
-  };
-
   return (
     <div className={style.wrapper}>
-      <form className={style.body} onSubmit={onSubmit}>
+      <div className={style.header}>
+        <img
+          className={style.checkbox}
+          src={finished ? CheckBoxChecked : CheckBox}
+          alt="checkbox"
+        />
         <h1 className={style.title}>{taskName}</h1>
-        <div className={style.description_section}>
-          <label htmlFor="task-description">
-            <textarea
-              className={style.task_description}
-              id="task-description"
-              placeholder="description"
-            />
-          </label>
-        </div>
-        <div>
-          <div className={style.input_short}>
-            <label htmlFor="task-value">
-              Bounty:
-              <input type="number" id="task-value" placeholder="0" />
-            </label>
-          </div>
-          <div className={style.input_short}>
-            <label htmlFor="task-duration">
-              Duration:
-              <input type="number" id="task-duration" placeholder="0" />
-            </label>
-          </div>
-        </div>
-        <div className={style.input_line}>
-          <label htmlFor="task-subtasks">
-            Sub Tasks:
-            <input type="text" id="task-subtasks" placeholder="Sub Tasks" />
-          </label>
-        </div>
-        <div className={style.input_line}>
-          <label htmlFor="task-links">
-            Links:
-            <input type="text" id="task-links" placeholder="Links" />
-          </label>
-        </div>
-        <div className={style.input_line}>
-          <label htmlFor="task-notes">
-            Notes:
-            <input type="text" id="task-notes" placeholder="Notes" />
-          </label>
-        </div>
+      </div>
+      <div className={style.description}>
+        <p>{taskDescription}</p>
+      </div>
+      <div className={style.input_line}>
+        <span className={style.input_short}>Bounty: {value} lumens</span>
+      </div>
+      <div className={style.input_line}>
+        <span className={style.input_short}>
+          Duration: {expectedTime == null ? 0 : expectedTime} minutes
+        </span>
+      </div>
+      <div className={style.input_line}>
+        <span>
+          Sub Tasks: {subtasks.length === 0 ? 'None' : JSON.stringify(subtasks)}
+        </span>
+      </div>
+      <div className={style.input_line}>
+        <span>
+          Links:
+          {taskLinks}
+        </span>
+      </div>
+      <div className={style.button_group}>
         <button
           className={style.submit_button}
           type="submit"
-          onClick={onSubmit}
+          onClick={() => console.log('start!')}
         >
           Start
         </button>
-      </form>
+        <button
+          className={style.edit_button}
+          type="button"
+          onClick={() => console.log(expectedTime)}
+        >
+          <span>Edit</span>
+        </button>
+      </div>
     </div>
   );
 }

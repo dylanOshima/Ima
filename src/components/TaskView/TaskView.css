@@ -8,37 +8,46 @@
   padding-bottom: 2rem;
 }
 
-.body {
-  margin: 0 5rem;
-  font-size: 1.1rem;
+.header {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 1.5rem;
 }
 
 .title {
   font-family: 'Bebas Neue';
   font-weight: normal;
   font-size: 4.5rem;
-  line-height: 7.185rem;
-  letter-spacing: 0.025rem;
+  /* letter-spacing: 0.025rem; */
   color: #2d2d2d;
   margin: 0rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.checkbox {
+  width: 4rem;
+  margin-right: 2rem;
 }
 
 /* FORM STYLES */
-.task_description {
+.description {
   resize: none;
+  margin: 0.5rem auto 1.5rem auto;
+  width: 60%;
+  height: 4rem;
+  background: #e2e2e2;
+  box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.25);
   border: none;
-  width: 80%;
-  min-height: 4rem;
-  background-color: #e2e2e2;
-  border-radius: 10px;
-  padding: 0.2rem 1rem;
+  border-radius: 7px;
+  padding: 0.2rem 0.8rem;
+  text-align: left;
 }
 
 .input_line {
-  font-weight: bold;
-  width: 100%;
   text-align: left;
-  margin: 1rem 2rem;
+  width: 60%;
+  margin: 0.5rem auto;
 }
 
 .input_line input,
@@ -54,16 +63,25 @@
 }
 
 .input_short {
-  max-width: 15%;
-  display: inline-block;
+  width: 12%;
+  text-align: center;
 }
 
-.submit_button {
+.submit_button,
+.edit_button {
   font-family: 'Bebas Neue';
   font-size: 1.5rem;
   color: white;
-  background: #107c3e;
   border: 2px solid #4f4f4f;
   border-radius: 4px;
   letter-spacing: 0.5em;
+}
+
+.submit_button {
+  background: #107c3e;
+  margin-right: 1.5rem;
+}
+
+.edit_button {
+  background: #2d2d2d;
 }
