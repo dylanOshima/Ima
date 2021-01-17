@@ -15,6 +15,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/no-unescaped-entities': ['error', { forbid: ['>', '}'] }],
+    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
   },
   parserOptions: {
     ecmaVersion: 2020,

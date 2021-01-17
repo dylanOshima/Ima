@@ -17,8 +17,8 @@ body {
   width: 100%;
 }
 
-.root {
-  min-width: 600px;
+#root {
+  min-width: 845px;
 }
 
 /* Used to display the day */
