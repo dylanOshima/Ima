@@ -1,23 +1,28 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { isPropertyOf, updateValue } from '../../util/TypeUtils';
 import {
-  TaskType,
-  INITIAL_TASK_STATE,
+  TaskPayload,
+  TASK_PAYLOAD,
+  addTask,
 } from '../../controller/reducers/tasksReducer';
+import { setCurrentPage } from '../../controller/reducers/pagesReducer';
 
 const style = require('./TaskView.css').default;
 const inputStyle = require('./TaskCreation.css').default;
 
 function NewTaskWrapper() {
+  const dispatch = useDispatch();
+
   function parseElement(
     el: HTMLInputElement
-  ): null | [keyof TaskType, TaskType[keyof TaskType]] {
+  ): null | [keyof TaskPayload, TaskPayload[keyof TaskPayload]] {
     if (el.tagName === 'DIV') {
       const nextEl = el.querySelector('input');
       if (nextEl != null) return parseElement(nextEl);
     } else if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
       const [field, value] = [el.name, el.value];
-      if (isPropertyOf(field, INITIAL_TASK_STATE)) {
+      if (isPropertyOf(field, TASK_PAYLOAD)) {
         return [field, value];
       }
     }
@@ -26,7 +31,7 @@ function NewTaskWrapper() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    let task: TaskType = INITIAL_TASK_STATE;
+    let task: TaskPayload = TASK_PAYLOAD;
     const elements = e.currentTarget.children;
     for (let i = 0; i < elements.length; i++) {
       const el = elements[i] as HTMLInputElement;
@@ -35,8 +40,8 @@ function NewTaskWrapper() {
         task = updateValue(val[0], val[1], task);
       }
     }
-    // alert('Submitting.... ');
-    // console.log(task);
+    dispatch(addTask(task));
+    dispatch(setCurrentPage({ page: 'tasks' }));
   };
 
   return (

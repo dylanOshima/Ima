@@ -12,25 +12,22 @@ export type TaskType = {
   expectedTime?: number;
 };
 
-export const INITIAL_TASK_STATE = {
-  id: -1,
-  taskName: '',
-  taskDescription: '',
-  finished: false,
-  taskLinks: [],
-  subtasks: [],
-  value: 10,
-} as TaskType;
-
-type TaskPayload = {
+export type TaskPayload = {
   taskName: string;
   taskDescription: string;
-  taskLinks?: string[];
-  subtasks?: TaskType[];
-  value?: number;
+  taskLinks?: string;
+  subtasks?: [];
+  value?: string;
   finished?: boolean;
   dueDate?: Date;
   expectedTime?: number;
+};
+
+export const TASK_PAYLOAD = {
+  taskName: '',
+  taskDescription: '',
+  taskLinks: '',
+  value: '10',
 };
 
 type TasksState = TaskType[];
@@ -71,15 +68,21 @@ const tasksSlice = createSlice({
       const {
         taskName,
         taskDescription,
-        taskLinks = [],
+        taskLinks: taskLinksRaw = '',
         subtasks = [],
-        value = 0,
+        value: valueRaw = '0',
         finished = false,
         dueDate,
         expectedTime,
       } = action.payload;
 
-      state.push({
+      // Parse value
+      const value = parseInt(valueRaw, 10);
+
+      // parse taskLinks
+      const taskLinks = taskLinksRaw.split(', ');
+
+      const newTask = {
         id: state.length,
         taskName,
         taskDescription,
@@ -89,7 +92,9 @@ const tasksSlice = createSlice({
         expectedTime,
         dueDate,
         value,
-      });
+      };
+      state.push(newTask);
+      // saveIt
     },
     toggleTask(state, action: PayloadAction<number>) {
       const task = state.find((t) => t.id === action.payload);
