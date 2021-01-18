@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 
 export type TaskType = {
   id: number;
@@ -41,6 +41,8 @@ const initialState = [
     taskLinks: [],
     subtasks: [],
     value: 0,
+    expectedTime: undefined,
+    dueDate: undefined,
   },
   {
     id: 1,
@@ -49,6 +51,9 @@ const initialState = [
     finished: false,
     taskLinks: [],
     subtasks: [],
+    value: 0,
+    expectedTime: undefined,
+    dueDate: undefined,
   },
   {
     id: 2,
@@ -57,6 +62,9 @@ const initialState = [
     finished: true,
     taskLinks: [],
     subtasks: [],
+    value: 0,
+    expectedTime: undefined,
+    dueDate: undefined,
   },
 ] as TasksState;
 
@@ -94,17 +102,23 @@ const tasksSlice = createSlice({
         value,
       };
       state.push(newTask);
-      // saveIt
+      // updateLocalStorage
+    },
+    editTask(state, action: PayloadAction<TaskType>) {
+      const task = action.payload;
+      state[task.id] = task;
+      // updateLocalStorage
     },
     toggleTask(state, action: PayloadAction<number>) {
       const task = state.find((t) => t.id === action.payload);
       if (task) {
         task.finished = !task.finished;
       }
+      // updateLocalStorage
     },
   },
 });
 
-export const { addTask, toggleTask } = tasksSlice.actions;
+export const { addTask, editTask, toggleTask } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

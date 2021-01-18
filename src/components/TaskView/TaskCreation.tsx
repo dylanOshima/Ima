@@ -2,45 +2,69 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { isPropertyOf, updateValue } from '../../util/TypeUtils';
 import {
-  TaskPayload,
+  TaskType,
   TASK_PAYLOAD,
   addTask,
+  editTask,
 } from '../../controller/reducers/tasksReducer';
 import { setCurrentPage } from '../../controller/reducers/pagesReducer';
 
 const style = require('./TaskView.css').default;
 const inputStyle = require('./TaskCreation.css').default;
 
-function NewTaskWrapper() {
+type NewTaskPropType = {
+  currentTask?: TaskType;
+  handleSwitch?: () => void;
+};
+
+/**
+ * WARN: The name for each input field has to
+ * correspond to the correct field in the state object.
+ */
+function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
   const dispatch = useDispatch();
 
-  function parseElement(
-    el: HTMLInputElement
-  ): null | [keyof TaskPayload, TaskPayload[keyof TaskPayload]] {
+  function parseElement<T>(
+    el: HTMLInputElement,
+    initialTask: T
+  ): null | [keyof T, any] {
     if (el.tagName === 'DIV') {
       const nextEl = el.querySelector('input');
-      if (nextEl != null) return parseElement(nextEl);
+      if (nextEl != null) return parseElement(nextEl, initialTask);
     } else if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
       const [field, value] = [el.name, el.value];
-      if (isPropertyOf(field, TASK_PAYLOAD)) {
+      if (isPropertyOf(field, initialTask)) {
         return [field, value];
       }
+      // eslint-disable-next-line no-console
+      throw new Error(
+        `[ERROR] ${field} is not a valid property in the initial task: ${initialTask}`
+      );
     }
     return null;
   }
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    let task: TaskPayload = TASK_PAYLOAD;
-    const elements = e.currentTarget.children;
+  function fetchElementData<T>(elements: HTMLCollection, initialTask: T): T {
+    let task = { ...initialTask };
+    // Parse each input element
     for (let i = 0; i < elements.length; i++) {
       const el = elements[i] as HTMLInputElement;
-      const val = parseElement(el);
-      if (val != null) {
-        task = updateValue(val[0], val[1], task);
-      }
+      const val = parseElement(el, initialTask);
+      if (val != null) task = updateValue(val[0], val[1], task);
     }
-    dispatch(addTask(task));
+    return task;
+  }
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const elements = e.currentTarget.children;
+    if (currentTask != null) {
+      const task = fetchElementData(elements, currentTask);
+      dispatch(editTask(task));
+    } else {
+      const task = fetchElementData(elements, TASK_PAYLOAD);
+      dispatch(addTask(task));
+    }
     dispatch(setCurrentPage({ page: 'tasks' }));
   };
 
@@ -51,11 +75,13 @@ function NewTaskWrapper() {
           className={inputStyle.title}
           name="taskName"
           placeholder="Untitled Task"
+          defaultValue={currentTask?.taskName}
         />
         <textarea
           className={inputStyle.description}
           name="taskDescription"
-          placeholder="description"
+          placeholder="What does it mean for this task to be completed?"
+          defaultValue={currentTask?.taskDescription}
         />
         <div className={inputStyle.input_line}>
           <label htmlFor="value">
@@ -65,6 +91,7 @@ function NewTaskWrapper() {
               type="number"
               name="value"
               placeholder="0"
+              defaultValue={currentTask?.value}
             />
             lumen
           </label>
@@ -77,6 +104,7 @@ function NewTaskWrapper() {
               type="number"
               name="expectedTime"
               placeholder="30"
+              defaultValue={currentTask?.expectedTime}
             />
             minutes
           </label>
@@ -99,12 +127,28 @@ function NewTaskWrapper() {
             <input type="text" name="notes" placeholder="Notes" />
           </label>
         </div> */}
-        <button className={inputStyle.submit_button} type="submit">
-          Submit
-        </button>
+        <div>
+          <button className={inputStyle.submit_button} type="submit">
+            {handleSwitch != null ? 'Update' : 'Submit'}
+          </button>
+          {handleSwitch != null ? (
+            <button
+              className={inputStyle.edit_button}
+              type="button"
+              onClick={handleSwitch}
+            >
+              Cancel
+            </button>
+          ) : null}
+        </div>
       </form>
     </div>
   );
 }
+
+NewTaskWrapper.defaultProps = {
+  currentTask: null,
+  handleSwitch: null,
+};
 
 export default NewTaskWrapper;

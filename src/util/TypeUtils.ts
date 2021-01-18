@@ -15,7 +15,7 @@ export function isPropertyOf<T>(key: any, object: T): key is keyof T {
  * @param obj the object to update
  */
 export function updateValue<Cls, T extends keyof Cls, K extends Cls[T]>(
-  key: string,
+  key: keyof Cls,
   value: K,
   obj: Cls
 ): Cls {

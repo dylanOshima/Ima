@@ -1,12 +1,19 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../controller/rootReducer';
 import CheckBox from './checkbox.svg';
 import CheckBoxChecked from './checkbox_checked.svg';
+import TaskCreation from './TaskCreation';
+import { TaskType } from '../../controller/reducers/tasksReducer';
 
 const style = require('./TaskView.css').default;
 
-function TaskView() {
+type TaskViewType = TaskType & {
+  handleSwitch?: () => void;
+};
+
+function TaskView({ handleSwitch, ...currentTask }: TaskViewType) {
   const {
     taskName,
     taskDescription,
@@ -15,10 +22,7 @@ function TaskView() {
     value,
     finished,
     expectedTime,
-  } = useSelector((state: RootState) => {
-    const { currentTask } = state.currentPage;
-    return state.tasks[currentTask];
-  });
+  } = currentTask;
 
   return (
     <div className={style.wrapper}>
@@ -63,7 +67,7 @@ function TaskView() {
         <button
           className={style.edit_button}
           type="button"
-          onClick={() => console.log(expectedTime)}
+          onClick={handleSwitch}
         >
           <span>Edit</span>
         </button>
@@ -72,4 +76,23 @@ function TaskView() {
   );
 }
 
-export default TaskView;
+TaskView.defaultProps = {
+  handleSwitch: null,
+};
+
+function TaskWrapper() {
+  const [editTask, setEditTask] = useState(false);
+
+  const task = useSelector((state: RootState) => {
+    const { currentTask } = state.currentPage;
+    return state.tasks[currentTask];
+  });
+
+  return editTask ? (
+    <TaskCreation currentTask={task} handleSwitch={() => setEditTask(false)} />
+  ) : (
+    <TaskView {...task} handleSwitch={() => setEditTask(true)} />
+  );
+}
+
+export default TaskWrapper;
