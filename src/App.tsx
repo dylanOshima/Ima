@@ -26,7 +26,7 @@ function TodayWrapper({ children }: TodayWrapperProps) {
 
 export default function App() {
   const dispatch = useDispatch();
-  const { page } = useSelector((state: RootState) => state.currentPage);
+  const { page } = useSelector((state: RootState) => state.pageState);
 
   const currentPage = useMemo(() => {
     return () => {

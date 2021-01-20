@@ -3,8 +3,8 @@ import pagesReducer from './reducers/pagesReducer';
 import tasksReducer from './reducers/tasksReducer';
 
 const rootReducer: Reducer = combineReducers({
-  tasks: tasksReducer,
-  currentPage: pagesReducer,
+  taskState: tasksReducer,
+  pageState: pagesReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

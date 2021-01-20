@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { isPropertyOf, updateValue } from '../../util/TypeUtils';
 import {
   TaskType,
-  TASK_PAYLOAD,
   addTask,
   editTask,
 } from '../../controller/reducers/tasksReducer';
@@ -11,6 +10,18 @@ import { setCurrentPage } from '../../controller/reducers/pagesReducer';
 
 const style = require('./TaskView.css').default;
 const inputStyle = require('./TaskCreation.css').default;
+
+const TASK_PAYLOAD = {
+  taskName: '',
+  taskDescription: '',
+  taskLinks: '',
+  finished: false,
+  value: '10',
+  subtasks: null,
+  expectedTime: null,
+  completed: false,
+  dueDate: null,
+};
 
 type NewTaskPropType = {
   currentTask?: TaskType;
@@ -38,7 +49,9 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
       }
       // eslint-disable-next-line no-console
       throw new Error(
-        `[ERROR] ${field} is not a valid property in the initial task: ${initialTask}`
+        `${field} is not a valid property in the initial task: ${JSON.stringify(
+          initialTask
+        )}`
       );
     }
     return null;
@@ -104,7 +117,7 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
               type="number"
               name="expectedTime"
               placeholder="30"
-              defaultValue={currentTask?.expectedTime}
+              defaultValue={currentTask?.expectedTime ?? undefined}
             />
             minutes
           </label>

@@ -11,10 +11,12 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import Storage from './util/TaskStorage';
+import { TasksStateType } from './controller/reducers/tasksReducer';
 
 export default class AppUpdater {
   constructor() {
@@ -23,6 +25,10 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
+
+const store = new Storage({
+  configName: 'test-config',
+});
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -130,4 +136,12 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
+});
+
+ipcMain.on('fetch-storage', (event) => {
+  event.returnValue = store.get();
+});
+
+ipcMain.on('write-storage', (_, arg: TasksStateType) => {
+  store.set(arg);
 });

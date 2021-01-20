@@ -1,38 +1,31 @@
-import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type TaskType = {
   id: number;
   taskName: string;
   taskDescription: string;
   taskLinks: string[];
-  subtasks: TaskType[];
+  subtasks: string[];
   value: number;
   finished: boolean;
-  dueDate?: Date;
-  expectedTime?: number;
+  dueDate: Date | null;
+  expectedTime: number | null;
 };
 
 export type TaskPayload = {
   taskName: string;
   taskDescription: string;
-  taskLinks?: string;
-  subtasks?: [];
-  value?: string;
-  finished?: boolean;
-  dueDate?: Date;
-  expectedTime?: number;
+  finished: boolean;
+  taskLinks: string | null;
+  subtasks: string[] | null;
+  value: string | null;
+  dueDate: Date | null;
+  expectedTime: number | null;
 };
 
-export const TASK_PAYLOAD = {
-  taskName: '',
-  taskDescription: '',
-  taskLinks: '',
-  value: '10',
-};
+export type TasksStateType = TaskType[];
 
-type TasksState = TaskType[];
-
-const initialState = [
+export const initialState = [
   {
     id: 0,
     taskName: 'Finish figma mockups',
@@ -41,8 +34,8 @@ const initialState = [
     taskLinks: [],
     subtasks: [],
     value: 0,
-    expectedTime: undefined,
-    dueDate: undefined,
+    expectedTime: null,
+    dueDate: null,
   },
   {
     id: 1,
@@ -52,8 +45,8 @@ const initialState = [
     taskLinks: [],
     subtasks: [],
     value: 0,
-    expectedTime: undefined,
-    dueDate: undefined,
+    expectedTime: null,
+    dueDate: null,
   },
   {
     id: 2,
@@ -63,32 +56,35 @@ const initialState = [
     taskLinks: [],
     subtasks: [],
     value: 0,
-    expectedTime: undefined,
-    dueDate: undefined,
+    expectedTime: null,
+    dueDate: null,
   },
-] as TasksState;
+] as TasksStateType;
 
 const tasksSlice = createSlice({
   name: 'tasks',
-  initialState,
+  initialState: [] as TasksStateType,
   reducers: {
     addTask(state, action: PayloadAction<TaskPayload>) {
       const {
         taskName,
         taskDescription,
-        taskLinks: taskLinksRaw = '',
-        subtasks = [],
-        value: valueRaw = '0',
-        finished = false,
+        taskLinks: taskLinksRaw,
+        subtasks: subtasksRaw,
+        value: valueRaw,
+        finished,
         dueDate,
         expectedTime,
       } = action.payload;
 
       // Parse value
-      const value = parseInt(valueRaw, 10);
+      const value = valueRaw != null ? parseInt(valueRaw, 10) : 0;
 
       // parse taskLinks
-      const taskLinks = taskLinksRaw.split(', ');
+      const taskLinks = taskLinksRaw?.split(', ') ?? [];
+
+      // parse subtasks
+      const subtasks = subtasksRaw ?? [];
 
       const newTask = {
         id: state.length,

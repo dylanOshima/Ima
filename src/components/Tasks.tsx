@@ -7,7 +7,7 @@ import { TaskType } from '../controller/reducers/tasksReducer';
 const style = require('./Tasks.css').default;
 
 function Tasks() {
-  const tasks = useSelector((state: RootState) => state.tasks);
+  const tasks = useSelector((state: RootState) => state.taskState);
 
   return (
     <div className={style.tasks}>

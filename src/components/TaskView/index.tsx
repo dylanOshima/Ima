@@ -84,8 +84,8 @@ function TaskWrapper() {
   const [editTask, setEditTask] = useState(false);
 
   const task = useSelector((state: RootState) => {
-    const { currentTask } = state.currentPage;
-    return state.tasks[currentTask];
+    const { currentTask } = state.pageState;
+    return state.taskState[currentTask];
   });
 
   return editTask ? (
