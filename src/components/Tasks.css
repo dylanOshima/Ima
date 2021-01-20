@@ -26,3 +26,10 @@
   letter-spacing: 0.25rem;
   color: #2d2d2d;
 }
+
+.empty_text {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  opacity: 0.75;
+  text-align: center;
+}

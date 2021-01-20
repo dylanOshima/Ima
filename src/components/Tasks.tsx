@@ -13,9 +13,17 @@ function Tasks() {
     <div className={style.tasks}>
       <div className={style.task_header}>Today's Tasks:</div>
       <div className={style.task_list}>
-        {tasks.map((task: TaskType) => (
-          <Task key={task.taskName} {...task} />
-        ))}
+        {tasks.length !== 0 ? (
+          tasks.map((task: TaskType) => <Task key={task.taskName} {...task} />)
+        ) : (
+          <div className={style.empty_text}>
+            <i>You have no tasks at the moment</i>{' '}
+            <span role="img" aria-label="you should go enjoy life">
+              🥳
+            </span>
+            !
+          </div>
+        )}
       </div>
     </div>
   );
