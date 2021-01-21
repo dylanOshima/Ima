@@ -1,0 +1,42 @@
+.wrapper {
+  text-align: left;
+  width: 60%;
+  margin: 0.5rem auto;
+}
+
+.autocomplete {
+  position: relative;
+}
+
+.textfield {
+  border: none;
+  margin-left: 0.5rem;
+}
+
+.textfield,
+.option {
+  padding: 0.2rem 0.4rem;
+}
+
+.option_list {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 1.5em;
+  left: 5.7em;
+  max-height: 12em;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  list-style-type: none;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.option:hover,
+.option[aria-selected='true'] {
+  background-color: #005ea5;
+  border-color: #005ea5;
+  color: #ffffff;
+}

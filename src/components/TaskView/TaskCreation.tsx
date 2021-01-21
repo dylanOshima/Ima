@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isPropertyOf, updateValue } from '../../util/TypeUtils';
 import {
   TaskType,
@@ -7,6 +7,8 @@ import {
   editTask,
 } from '../../controller/reducers/tasksReducer';
 import { setCurrentPage } from '../../controller/reducers/pagesReducer';
+import SelectorInput from '../form/SelectorInput';
+import { RootState } from '../../controller/rootReducer';
 
 const style = require('./TaskView.css').default;
 const inputStyle = require('./TaskCreation.css').default;
@@ -34,6 +36,7 @@ type NewTaskPropType = {
  */
 function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
   const dispatch = useDispatch();
+  const tasks = useSelector((state: RootState) => state.taskState);
 
   function parseElement<T>(
     el: HTMLInputElement,
@@ -122,16 +125,23 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
             minutes
           </label>
         </div>
-        <div className={inputStyle.input_line}>
-          <label htmlFor="task-subtasks">
-            Sub Tasks:
-            <input type="text" name="subtasks" placeholder="Sub Tasks" />
-          </label>
-        </div>
+        <SelectorInput
+          className="form-input"
+          label="Sub Tasks:"
+          type="text"
+          name="subtasks"
+          placeholder="Sub Tasks"
+          options={tasks}
+        />
         <div className={inputStyle.input_line}>
           <label htmlFor="task-links">
             Links:
-            <input type="text" name="taskLinks" placeholder="Links" />
+            <input
+              className="form-input"
+              type="text"
+              name="taskLinks"
+              placeholder="Links"
+            />
           </label>
         </div>
         {/* <div className={inputStyle.input_line}>

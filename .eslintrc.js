@@ -16,6 +16,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/no-unescaped-entities': ['error', { forbid: ['>', '}'] }],
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
+    'jsx-a11y/label-has-for': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
