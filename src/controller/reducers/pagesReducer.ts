@@ -4,13 +4,13 @@ type PageTypes = 'tasks' | 'new_task' | 'edit_task' | 'account';
 
 interface CurrentPageState {
   page: PageTypes;
-  currentTask: number | null;
+  currentTask: string | null;
   accountId: number | null;
 }
 
 interface CurrentPagePayload {
   page: PageTypes;
-  currentTask?: number;
+  currentTask?: string;
   accountId?: number;
 }
 

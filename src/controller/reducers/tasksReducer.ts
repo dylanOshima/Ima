@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 
 export type TaskType = {
-  id: number;
+  id: string;
   taskName: string;
   taskDescription: string;
   taskLinks: string[];
@@ -25,42 +26,6 @@ export type TaskPayload = {
 
 export type TasksStateType = TaskType[];
 
-export const initialState = [
-  {
-    id: 0,
-    taskName: 'Finish figma mockups',
-    taskDescription: 'A really sexy task',
-    finished: false,
-    taskLinks: [],
-    subtasks: [],
-    value: 0,
-    expectedTime: null,
-    dueDate: null,
-  },
-  {
-    id: 1,
-    taskName: 'Create persistant storage',
-    taskDescription: 'A really sexy task',
-    finished: false,
-    taskLinks: [],
-    subtasks: [],
-    value: 0,
-    expectedTime: null,
-    dueDate: null,
-  },
-  {
-    id: 2,
-    taskName: 'Turn these into react components',
-    taskDescription: 'A really sexy task',
-    finished: true,
-    taskLinks: [],
-    subtasks: [],
-    value: 0,
-    expectedTime: null,
-    dueDate: null,
-  },
-] as TasksStateType;
-
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState: [] as TasksStateType,
@@ -76,18 +41,15 @@ const tasksSlice = createSlice({
         dueDate,
         expectedTime,
       } = action.payload;
-
       // Parse value
       const value = valueRaw != null ? parseInt(valueRaw, 10) : 0;
-
       // parse taskLinks
       const taskLinks = taskLinksRaw?.split(', ') ?? [];
-
       // parse subtasks
-      const subtasks = subtasksRaw ?? [];
-
-      const newTask = {
-        id: state.length,
+      const subtasks =
+        subtasksRaw == null || subtasksRaw.length === 0 ? [] : subtasksRaw;
+      state.push({
+        id: uuidv4(),
         taskName,
         taskDescription,
         taskLinks,
@@ -96,25 +58,26 @@ const tasksSlice = createSlice({
         expectedTime,
         dueDate,
         value,
-      };
-      state.push(newTask);
-      // updateLocalStorage
+      });
     },
     editTask(state, action: PayloadAction<TaskType>) {
-      const task = action.payload;
-      state[task.id] = task;
-      // updateLocalStorage
+      const updatedTask = action.payload;
+      return state.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      );
     },
-    toggleTask(state, action: PayloadAction<number>) {
+    deleteTask(state, action: PayloadAction<TaskType['id']>) {
+      return state.filter((task) => task.id !== action.payload);
+    },
+    toggleTask(state, action: PayloadAction<TaskType['id']>) {
       const task = state.find((t) => t.id === action.payload);
       if (task) {
         task.finished = !task.finished;
       }
-      // updateLocalStorage
     },
   },
 });
 
-export const { addTask, editTask, toggleTask } = tasksSlice.actions;
+export const { addTask, editTask, toggleTask, deleteTask } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

@@ -94,3 +94,10 @@ h2 {
 .visually-hidden {
   display: none;
 }
+
+button.plain-button {
+  border: none;
+  background-color: inherit;
+  margin: 0;
+  padding: 0;
+}

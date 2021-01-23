@@ -153,11 +153,7 @@ function SelectorInput({
 }
 
 SelectorInput.defaultProps = {
-  options: [
-    { id: 0, taskName: 'Dylan' },
-    { id: 1, taskName: 'Sakuta' },
-    { id: 2, taskName: 'Shoko' },
-  ],
+  options: [],
   htmlFor: 'task-subtasks',
 };
 

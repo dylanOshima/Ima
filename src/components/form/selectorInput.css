@@ -34,7 +34,6 @@
   z-index: 2;
 }
 
-.option:hover,
 .option[aria-selected='true'] {
   background-color: #005ea5;
   border-color: #005ea5;

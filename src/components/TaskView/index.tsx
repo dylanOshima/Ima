@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../controller/rootReducer';
-import CheckBox from './checkbox.svg';
-import CheckBoxChecked from './checkbox_checked.svg';
+import CheckBox from './icons/checkbox.svg';
+import CheckBoxChecked from './icons/checkbox_checked.svg';
+import TrashIcon from './icons/trash.svg';
+import TrashIconHovered from './icons/trash-opened.svg';
 import TaskCreation from './TaskCreation';
-import { TaskType } from '../../controller/reducers/tasksReducer';
+import { TaskType, deleteTask } from '../../controller/reducers/tasksReducer';
+import { setCurrentPage } from '../../controller/reducers/pagesReducer';
 
 const style = require('./TaskView.css').default;
 
@@ -14,7 +17,10 @@ type TaskViewType = TaskType & {
 };
 
 function TaskView({ handleSwitch, ...currentTask }: TaskViewType) {
+  const [isTrashHovered, setIsTrashHovered] = useState(false);
+  const dispatch = useDispatch();
   const {
+    id,
     taskName,
     taskDescription,
     taskLinks,
@@ -23,6 +29,11 @@ function TaskView({ handleSwitch, ...currentTask }: TaskViewType) {
     finished,
     expectedTime,
   } = currentTask;
+  console.log(currentTask);
+  const handleTrashClick = () => {
+    dispatch(deleteTask(id));
+    dispatch(setCurrentPage({ page: 'tasks' }));
+  };
 
   return (
     <div className={style.wrapper}>
@@ -33,6 +44,19 @@ function TaskView({ handleSwitch, ...currentTask }: TaskViewType) {
           alt="checkbox"
         />
         <h1 className={style.title}>{taskName}</h1>
+        <button
+          className="plain-button"
+          type="button"
+          onClick={handleTrashClick}
+        >
+          <img
+            className={style.trashcan}
+            src={isTrashHovered ? TrashIconHovered : TrashIcon}
+            alt="trashcan for deleting"
+            onMouseEnter={() => setIsTrashHovered(true)}
+            onMouseLeave={() => setIsTrashHovered(false)}
+          />
+        </button>
       </div>
       <div className={style.description}>
         <p>{taskDescription}</p>
@@ -47,7 +71,10 @@ function TaskView({ handleSwitch, ...currentTask }: TaskViewType) {
       </div>
       <div className={style.input_line}>
         <span>
-          Sub Tasks: {subtasks.length === 0 ? 'None' : JSON.stringify(subtasks)}
+          Sub Tasks:{' '}
+          {subtasks == null || subtasks.length === 0
+            ? 'None'
+            : JSON.stringify(subtasks)}
         </span>
       </div>
       <div className={style.input_line}>
@@ -85,13 +112,21 @@ function TaskWrapper() {
 
   const task = useSelector((state: RootState) => {
     const { currentTask } = state.pageState;
-    return state.taskState[currentTask];
+    return state.taskState.filter((t: TaskType) => t.id === currentTask);
   });
 
+  if (task.length === 0)
+    throw new Error(
+      `Something odd has occurred, no tasks were found related to the selected task.`
+    );
+
   return editTask ? (
-    <TaskCreation currentTask={task} handleSwitch={() => setEditTask(false)} />
+    <TaskCreation
+      currentTask={task.pop()}
+      handleSwitch={() => setEditTask(false)}
+    />
   ) : (
-    <TaskView {...task} handleSwitch={() => setEditTask(true)} />
+    <TaskView {...task.pop()} handleSwitch={() => setEditTask(true)} />
   );
 }
 

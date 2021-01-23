@@ -29,6 +29,10 @@
   width: 4rem;
   margin-right: 2rem;
 }
+.trashcan {
+  width: 4rem;
+  margin-left: 2rem;
+}
 
 /* FORM STYLES */
 .description {

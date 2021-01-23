@@ -1,20 +1,9 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentPage } from '../controller/reducers/pagesReducer';
+import { TaskType } from '../controller/reducers/tasksReducer';
 
 const style = require('./Task.css').default;
-
-type TaskType = {
-  id: number;
-  taskName: string;
-  taskDescription: string;
-  // taskLinks: string[];
-  // subtasks: TaskType[];
-  // value?: number;
-  // dueDate: Date | null | undefined;
-  // expectedTime?: number;
-  finished: boolean;
-};
 
 /*
  * Description of function
