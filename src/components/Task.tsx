@@ -19,6 +19,7 @@ function Task({ id: taskId, taskName, taskDescription, finished }: TaskType) {
       onClick={() =>
         dispatch(setCurrentPage({ page: 'edit_task', currentTask: taskId }))
       }
+      onKeyDown={() => {}}
     >
       <input
         className={style.task_checkbox}
@@ -27,7 +28,7 @@ function Task({ id: taskId, taskName, taskDescription, finished }: TaskType) {
         readOnly
       />
       <span>
-        {taskName} - {taskDescription}
+        {taskName} {taskDescription !== '' ? `- ${taskDescription}` : ''}
       </span>
     </div>
   );

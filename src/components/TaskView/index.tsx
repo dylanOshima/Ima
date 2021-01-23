@@ -29,7 +29,7 @@ function TaskView({ handleSwitch, ...currentTask }: TaskViewType) {
     finished,
     expectedTime,
   } = currentTask;
-  console.log(currentTask);
+
   const handleTrashClick = () => {
     dispatch(deleteTask(id));
     dispatch(setCurrentPage({ page: 'tasks' }));
