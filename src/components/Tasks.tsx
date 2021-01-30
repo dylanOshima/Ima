@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Task from './Task';
 import { RootState } from '../controller/rootReducer';
-import { TaskType } from '../controller/reducers/tasksReducer';
+import { TaskType } from '../entities/Task';
 
 const style = require('./Tasks.css').default;
 

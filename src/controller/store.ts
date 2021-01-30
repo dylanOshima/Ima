@@ -2,26 +2,19 @@ import { configureStore } from '@reduxjs/toolkit';
 import { ipcRenderer } from 'electron';
 import rootReducer from './rootReducer';
 
-function fetchInitialState() {
-  const state = {
-    pageState: { page: 'tasks' },
-    taskState: [],
-  };
-  const savedTasksState = ipcRenderer.sendSync('fetch-storage');
-  if (savedTasksState != null) state.taskState = savedTasksState;
-  return state;
-}
-
 const store = configureStore({
   reducer: rootReducer,
-  preloadedState: fetchInitialState(),
+  preloadedState: {
+    pageState: { page: 'tasks' },
+    taskState: [],
+  },
 });
 
 // TODO: Throttle this shit
 store.subscribe(
   (() => {
     let prevTaskState = store.getState().taskState;
-    return () => {
+    return async () => {
       const newTaskState = store.getState().taskState;
       if (prevTaskState !== newTaskState) {
         prevTaskState = newTaskState;

@@ -7,8 +7,9 @@ import CheckBoxChecked from './icons/checkbox_checked.svg';
 import TrashIcon from './icons/trash.svg';
 import TrashIconHovered from './icons/trash-opened.svg';
 import TaskCreation from './TaskCreation';
-import { TaskType, deleteTask } from '../../controller/reducers/tasksReducer';
+import { deleteTask } from '../../controller/reducers/tasksReducer';
 import { setCurrentPage } from '../../controller/reducers/pagesReducer';
+import type { TaskType } from '../../entities/Task';
 
 const style = require('./TaskView.css').default;
 

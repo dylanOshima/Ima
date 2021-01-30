@@ -15,7 +15,7 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import Storage from './util/TaskStorage';
+import Database from './util/Database';
 import { TasksStateType } from './controller/reducers/tasksReducer';
 
 export default class AppUpdater {
@@ -26,8 +26,8 @@ export default class AppUpdater {
   }
 }
 
-const store = new Storage({
-  configName: 'test-config',
+const db = new Database({
+  storageFolderName: 'test-config',
 });
 
 let mainWindow: BrowserWindow | null = null;
@@ -47,7 +47,7 @@ if (
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
+  const extensions: string[] = []; // ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
   return installer
     .default(
@@ -138,10 +138,15 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-ipcMain.on('fetch-storage', (event) => {
-  event.returnValue = store.get();
+// Database Events
+ipcMain.on('fetch-storage', async (event) => {
+  console.log('fetching storage...');
+  const tasks = await db.getAlltasks();
+  console.log('found: ', tasks);
+  event.reply('fetch-storage-reply', tasks);
 });
 
 ipcMain.on('write-storage', (_, arg: TasksStateType) => {
-  store.set(arg);
+  console.log('writing to storage');
+  db.addTasks(arg);
 });

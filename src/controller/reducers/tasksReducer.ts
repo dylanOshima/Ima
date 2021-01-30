@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { TaskType } from '../types/Tasks';
+import { ipcRenderer } from 'electron';
+import { TaskType } from '../../entities/Task';
 
 export type TaskPayload = {
   taskName: string;
@@ -15,39 +16,64 @@ export type TaskPayload = {
 
 export type TasksStateType = TaskType[];
 
+// IPC Actions
+export const fetchCurrentTasks = () => {
+  ipcRenderer.send('fetch-storage');
+};
+
+const handleCurrentTasks = createAction(
+  'tasks/handleCurrentTasks',
+  (tasks: TasksStateType) => {
+    return { payload: tasks };
+  }
+);
+ipcRenderer.on('fetch-storage-reply', (_, arg: TasksStateType) =>
+  handleCurrentTasks(arg)
+);
+
+// Tasks Reducer
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState: [] as TasksStateType,
+  extraReducers: (builder) => {
+    builder.addCase(handleCurrentTasks, (state, action) => {
+      state.push(...action.payload);
+    });
+    builder.addDefaultCase((_) => {});
+  },
   reducers: {
-    addTask(state, action: PayloadAction<TaskPayload>) {
-      const {
-        taskName,
-        taskDescription,
+    addTask: {
+      reducer: (state, action: PayloadAction<TaskType>) => {
+        state.push(action.payload);
+      },
+      prepare({
         taskLinks: taskLinksRaw,
         subtasks: subtasksRaw,
         value: valueRaw,
-        finished,
-        dueDate,
-        expectedTime,
-      } = action.payload;
-      // Parse value
-      const value = valueRaw != null ? parseInt(valueRaw, 10) : 0;
-      // parse taskLinks
-      const taskLinks = taskLinksRaw?.split(', ') ?? [];
-      // parse subtasks
-      const subtasks =
-        subtasksRaw == null || subtasksRaw.length === 0 ? [] : subtasksRaw;
-      state.push({
-        id: uuidv4(),
-        taskName,
-        taskDescription,
-        taskLinks,
-        subtasks,
-        finished,
-        expectedTime,
-        dueDate,
-        value,
-      });
+        finished = false,
+        ...task
+      }: TaskPayload) {
+        // Parse value
+        const value = valueRaw != null ? parseInt(valueRaw, 10) : 0;
+
+        // parse taskLinks
+        const taskLinks = taskLinksRaw?.split(', ') ?? [];
+
+        // parse subtasks
+        const subtasks =
+          subtasksRaw == null || subtasksRaw.length === 0 ? [] : subtasksRaw;
+
+        return {
+          payload: {
+            ...task,
+            id: uuidv4(),
+            value,
+            taskLinks,
+            subtasks,
+            finished,
+          } as TaskType,
+        };
+      },
     },
     editTask(state, action: PayloadAction<TaskType>) {
       const updatedTask = action.payload;

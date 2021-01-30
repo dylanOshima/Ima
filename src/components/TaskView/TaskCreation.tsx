@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPropertyOf, updateValue } from '../../util/TypeUtils';
-import {
-  TaskType,
-  addTask,
-  editTask,
-} from '../../controller/reducers/tasksReducer';
+import { addTask, editTask } from '../../controller/reducers/tasksReducer';
 import { setCurrentPage } from '../../controller/reducers/pagesReducer';
 import SelectorInput from '../form/SelectorInput';
 import { RootState } from '../../controller/rootReducer';
+import type { TaskType } from '../../entities/Task';
 
 const style = require('./TaskView.css').default;
 const inputStyle = require('./TaskCreation.css').default;

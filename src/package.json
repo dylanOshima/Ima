@@ -14,5 +14,12 @@
     "postinstall": "yarn electron-rebuild"
   },
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "@mikro-orm/core": "^4.4.0",
+    "@mikro-orm/reflection": "^4.4.0",
+    "@mikro-orm/sqlite": "^4.4.0"
+  },
+  "devDependencies": {
+    "sqlite3": "^5.0.1"
+  }
 }
