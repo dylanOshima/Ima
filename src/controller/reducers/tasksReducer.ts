@@ -1,17 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-
-export type TaskType = {
-  id: string;
-  taskName: string;
-  taskDescription: string;
-  taskLinks: string[];
-  subtasks: string[];
-  value: number;
-  finished: boolean;
-  dueDate: Date | null;
-  expectedTime: number | null;
-};
+import { TaskType } from '../types/Tasks';
 
 export type TaskPayload = {
   taskName: string;
