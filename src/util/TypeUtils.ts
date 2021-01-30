@@ -4,6 +4,7 @@
  * @param key a possible key in the object
  * @param object the object to compare to
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isPropertyOf<T>(key: any, object: T): key is keyof T {
   return key in object;
 }
