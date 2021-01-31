@@ -16,7 +16,12 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import Database from './util/Database';
-import Task from './entities/Task';
+import {
+  ADD_TASK_REQUEST,
+  UPDATE_TASK_REPLY,
+  UPDATE_TASK_REQUEST,
+} from './util/constants';
+import Task, { TaskType } from './entities/Task';
 
 export default class AppUpdater {
   constructor() {
@@ -146,7 +151,17 @@ ipcMain.on('fetch-storage', async (event) => {
   event.reply('fetch-storage-reply', tasksConv);
 });
 
-ipcMain.on('add-new-task', (_, arg: Task | Task[]) => {
-  console.log('IPC: "add-new-task" event');
-  db.addTasks(arg);
+ipcMain.on(ADD_TASK_REQUEST, async (event, t: Task) => {
+  const key = t.id;
+  const task = new Task(t);
+  await db.em?.persistAndFlush(task);
+  event.reply(UPDATE_TASK_REPLY, {
+    updatedTask: Task.convert(task),
+    key,
+  });
+});
+
+ipcMain.on(UPDATE_TASK_REQUEST, async (_, task: TaskType) => {
+  console.log(`IPC: "${UPDATE_TASK_REQUEST}" event`);
+  db.em?.persistAndFlush(task);
 });

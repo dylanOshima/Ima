@@ -9,7 +9,10 @@ import { setCurrentPage } from './controller/reducers/pagesReducer';
 import {
   TasksStateType,
   handleCurrentTasks,
+  updateTaskAction,
+  UpdateTaskPayloadType,
 } from './controller/reducers/tasksReducer';
+import { UPDATE_TASK_REPLY } from './util/constants';
 
 const style = require('./components/Tasks.css').default;
 
@@ -35,8 +38,11 @@ export default function App() {
 
   useEffect(() => {
     ipcRenderer.send('fetch-storage');
-    ipcRenderer.on('fetch-storage-reply', (_, arg: TasksStateType) => {
-      dispatch(handleCurrentTasks(arg));
+    ipcRenderer.on('fetch-storage-reply', (_, payload: TasksStateType) => {
+      dispatch(handleCurrentTasks(payload));
+    });
+    ipcRenderer.on(UPDATE_TASK_REPLY, (_, payload: UpdateTaskPayloadType) => {
+      dispatch(updateTaskAction(payload));
     });
     // We want this use effect to only execute once.
     // eslint-disable-next-line react-hooks/exhaustive-deps

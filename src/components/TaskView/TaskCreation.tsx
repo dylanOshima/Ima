@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPropertyOf, updateValue } from '../../util/TypeUtils';
-import { addTask, editTask } from '../../controller/reducers/tasksReducer';
+import {
+  addTaskAction,
+  editTask,
+} from '../../controller/reducers/tasksReducer';
 import { setCurrentPage } from '../../controller/reducers/pagesReducer';
 import SelectorInput from '../form/SelectorInput';
 import { RootState } from '../../controller/rootReducer';
@@ -77,7 +80,7 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
       dispatch(editTask(task));
     } else {
       const task = fetchElementData(elements, TASK_PAYLOAD);
-      dispatch(addTask(task));
+      dispatch(addTaskAction(task));
     }
     dispatch(setCurrentPage({ page: 'tasks' }));
   };

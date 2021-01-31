@@ -1,5 +1,7 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ipcRenderer } from 'electron';
+import { v4 as uuidv4 } from 'uuid';
+import { ADD_TASK_REQUEST } from '../../util/constants';
 import { TaskType } from '../../entities/Task';
 
 export type TaskPayload = {
@@ -22,6 +24,46 @@ export const handleCurrentTasks = createAction(
   }
 );
 
+export type UpdateTaskPayloadType = {
+  updatedTask: TaskType;
+  key?: string;
+};
+export const updateTaskAction = createAction<UpdateTaskPayloadType>(
+  'tasks/updateTask'
+);
+
+export const addTaskAction = createAction(
+  'tasks/addTask',
+  ({
+    taskLinks: taskLinksRaw,
+    subtasks: subtasksRaw,
+    value: valueRaw,
+    finished = false,
+    ...otherProps
+  }: TaskPayload) => {
+    // Parse value
+    const value =
+      valueRaw != null && !!valueRaw.length ? parseInt(valueRaw, 10) : 0;
+    // parse taskLinks
+    const taskLinks = taskLinksRaw?.split(', ') ?? [];
+    // parse subtasks
+    const subtasks =
+      subtasksRaw == null || subtasksRaw.length === 0 ? [] : subtasksRaw;
+    // temp id
+    const key = uuidv4();
+    const payload: TaskType = {
+      ...otherProps,
+      id: key,
+      value,
+      taskLinks,
+      subtasks,
+      finished,
+    };
+    ipcRenderer.send(ADD_TASK_REQUEST, payload);
+    return { payload };
+  }
+);
+
 // Tasks Reducer
 const tasksSlice = createSlice({
   name: 'tasks',
@@ -30,45 +72,21 @@ const tasksSlice = createSlice({
     builder.addCase(handleCurrentTasks, (state, action) => {
       state.push(...action.payload);
     });
+    builder.addCase(addTaskAction, (state, action: PayloadAction<TaskType>) => {
+      state.push(action.payload);
+    });
+    builder.addCase(updateTaskAction, (state, action) => {
+      const { updatedTask, key = updatedTask.id } = action.payload;
+      const newState: TasksStateType = state.map((task) =>
+        task.id === key ? updatedTask : task
+      );
+      return newState;
+    });
     builder.addDefaultCase(() => {
       // console.log(`Don't know how to handle action of type ${action.type}`);
     });
   },
   reducers: {
-    addTask: {
-      reducer: (state, action: PayloadAction<TaskType>) => {
-        const task = action.payload;
-        ipcRenderer.send('write-storage', task);
-        state.push(task);
-      },
-      prepare({
-        taskLinks: taskLinksRaw,
-        subtasks: subtasksRaw,
-        value: valueRaw,
-        finished = false,
-        ...task
-      }: TaskPayload) {
-        // Parse value
-        const value = valueRaw != null ? parseInt(valueRaw, 10) : 0;
-
-        // parse taskLinks
-        const taskLinks = taskLinksRaw?.split(', ') ?? [];
-
-        // parse subtasks
-        const subtasks =
-          subtasksRaw == null || subtasksRaw.length === 0 ? [] : subtasksRaw;
-
-        return {
-          payload: {
-            ...task,
-            value,
-            taskLinks,
-            subtasks,
-            finished,
-          } as TaskType,
-        };
-      },
-    },
     editTask(state, action: PayloadAction<TaskType>) {
       const updatedTask = action.payload;
       return (state.map((task) =>
@@ -87,6 +105,6 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { addTask, editTask, toggleTask, deleteTask } = tasksSlice.actions;
+export const { toggleTask, editTask, deleteTask } = tasksSlice.actions;
 
 export default tasksSlice.reducer;
