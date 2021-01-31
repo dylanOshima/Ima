@@ -7,6 +7,8 @@ Yet another Todo app.
 - [ ] Create homepage interface
 - [ ] Allow for persistent storage
 - [ ] Figure out wtf the `menu` file does
+- [ ] Fix initialization of table on first run
+  - I tried using Mikro-ORM's `TableNotFoundException` but it returns a promise rejection and I'm not sure how to unpack that yet.
 
 ## References
 

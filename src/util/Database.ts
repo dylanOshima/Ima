@@ -29,14 +29,12 @@ class Database {
     // We'll use the `storageFolderName` property to set the file name and
     // path.join to bring it all together as a string
     this.path = path.join(userDataPath, `${opts.storageFolderName}`);
-    try {
-      (async () => {
-        this.db = await MikroORM.init();
-        this.em = this.db.em;
-      })();
-    } catch (err) {
-      throw new Error(`Database could not be initalized! ${err}`);
-    }
+    // Start database
+    (async () => {
+      this.db = await MikroORM.init();
+      this.em = this.db.em;
+      this.getAllTasks();
+    })();
   }
 
   get Tasks() {
@@ -47,7 +45,7 @@ class Database {
    * Get all the tasks in the database
    * TODO: We will want to make this more specific otherwise it can get phat
    */
-  getAlltasks() {
+  getAllTasks() {
     return this.em?.find(Task, {});
   }
 

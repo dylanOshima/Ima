@@ -1,11 +1,15 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { ipcRenderer } from 'electron';
 import Tasks from './components/Tasks';
 import TasksCreation from './components/TaskView/TaskCreation';
 import TaskView from './components/TaskView';
 import { RootState } from './controller/rootReducer';
 import { setCurrentPage } from './controller/reducers/pagesReducer';
-import { fetchCurrentTasks } from './controller/reducers/tasksReducer';
+import {
+  TasksStateType,
+  handleCurrentTasks,
+} from './controller/reducers/tasksReducer';
 
 const style = require('./components/Tasks.css').default;
 
@@ -29,9 +33,13 @@ export default function App() {
   const dispatch = useDispatch();
   const { page } = useSelector((state: RootState) => state.pageState);
 
-  // Get the latest tasks
   useEffect(() => {
-    fetchCurrentTasks();
+    ipcRenderer.send('fetch-storage');
+    ipcRenderer.on('fetch-storage-reply', (_, arg: TasksStateType) => {
+      dispatch(handleCurrentTasks(arg));
+    });
+    // We want this use effect to only execute once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentPage = useMemo(() => {

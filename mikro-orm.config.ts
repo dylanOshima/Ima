@@ -6,6 +6,6 @@ export default {
   entities: ['./src/entities'],
   entitiesTs: ['./src/entities'],
   type: 'sqlite',
-  dbName: 'dev-db',
+  dbName: './temp/dev-db',
   debug: true, // TODO: Make this based on the env variable
 } as Options;

@@ -140,13 +140,12 @@ app.on('activate', () => {
 
 // Database Events
 ipcMain.on('fetch-storage', async (event) => {
-  console.log('fetching storage...');
-  const tasks = await db.getAlltasks();
-  console.log('found: ', tasks);
+  console.log('IPC: "fetching-storage" event');
+  const tasks = await db.getAllTasks();
   event.reply('fetch-storage-reply', tasks);
 });
 
 ipcMain.on('write-storage', (_, arg: TasksStateType) => {
-  console.log('writing to storage');
+  console.log('IPC: "write-storage" event');
   db.addTasks(arg);
 });

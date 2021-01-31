@@ -1,6 +1,5 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { ipcRenderer } from 'electron';
 import { TaskType } from '../../entities/Task';
 
 export type TaskPayload = {
@@ -16,19 +15,11 @@ export type TaskPayload = {
 
 export type TasksStateType = TaskType[];
 
-// IPC Actions
-export const fetchCurrentTasks = () => {
-  ipcRenderer.send('fetch-storage');
-};
-
-const handleCurrentTasks = createAction(
+export const handleCurrentTasks = createAction(
   'tasks/handleCurrentTasks',
   (tasks: TasksStateType) => {
     return { payload: tasks };
   }
-);
-ipcRenderer.on('fetch-storage-reply', (_, arg: TasksStateType) =>
-  handleCurrentTasks(arg)
 );
 
 // Tasks Reducer
@@ -39,7 +30,9 @@ const tasksSlice = createSlice({
     builder.addCase(handleCurrentTasks, (state, action) => {
       state.push(...action.payload);
     });
-    builder.addDefaultCase((_) => {});
+    builder.addDefaultCase((_, action) => {
+      // console.log(`Don't know how to handle action of type ${action.type}`);
+    });
   },
   reducers: {
     addTask: {

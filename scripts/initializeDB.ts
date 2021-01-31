@@ -7,8 +7,6 @@ import Task from '../src/entities/Task';
 
     // Initialize schema
     const generator = orm.getSchemaGenerator();
-    const dropAndCreateDump = await generator.generate();
-    // console.log(dropAndCreateDump);
 
     // Initialize a test task
     const tutorialTask = new Task({
@@ -23,12 +21,9 @@ import Task from '../src/entities/Task';
     // console.log(tutorialTask);
 
     // Commit
-    const connection = orm.em.getConnection();
-    const schemaResp = await connection.execute(dropAndCreateDump);
-    const addTaskResp = await orm.em.nativeInsert(tutorialTask);
-    console.log(`dropAndCreateDump response: ${schemaResp}`);
-    console.log(`addTask response: ${addTaskResp}`);
-
+    await generator.dropSchema();
+    await generator.createSchema();
+    await orm.em.nativeInsert(tutorialTask);
     await orm.close(true);
   } catch (err) {
     throw new Error(`Error populating database. ${err}`);
