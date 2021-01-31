@@ -1,5 +1,5 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
+import { ipcRenderer } from 'electron';
 import { TaskType } from '../../entities/Task';
 
 export type TaskPayload = {
@@ -17,8 +17,8 @@ export type TasksStateType = TaskType[];
 
 export const handleCurrentTasks = createAction(
   'tasks/handleCurrentTasks',
-  (tasks: TasksStateType) => {
-    return { payload: tasks };
+  (payload: TaskType[]) => {
+    return { payload };
   }
 );
 
@@ -30,14 +30,16 @@ const tasksSlice = createSlice({
     builder.addCase(handleCurrentTasks, (state, action) => {
       state.push(...action.payload);
     });
-    builder.addDefaultCase((_, action) => {
+    builder.addDefaultCase(() => {
       // console.log(`Don't know how to handle action of type ${action.type}`);
     });
   },
   reducers: {
     addTask: {
       reducer: (state, action: PayloadAction<TaskType>) => {
-        state.push(action.payload);
+        const task = action.payload;
+        ipcRenderer.send('write-storage', task);
+        state.push(task);
       },
       prepare({
         taskLinks: taskLinksRaw,
@@ -59,7 +61,6 @@ const tasksSlice = createSlice({
         return {
           payload: {
             ...task,
-            id: uuidv4(),
             value,
             taskLinks,
             subtasks,
@@ -70,9 +71,9 @@ const tasksSlice = createSlice({
     },
     editTask(state, action: PayloadAction<TaskType>) {
       const updatedTask = action.payload;
-      return state.map((task) =>
+      return (state.map((task) =>
         task.id === updatedTask.id ? updatedTask : task
-      );
+      ) as unknown) as TasksStateType;
     },
     deleteTask(state, action: PayloadAction<TaskType['id']>) {
       return state.filter((task) => task.id !== action.payload);

@@ -2,7 +2,7 @@ import { Collection, Entity, ManyToMany, Property } from '@mikro-orm/core';
 
 import BaseEntity from './BaseEntity';
 
-type TaskConstructorArgType = Omit<TaskType, 'subtasks'> & {
+type TaskConstructorArgType = Omit<TaskType, 'subtasks' | 'id'> & {
   subtasks?: Collection<Task>;
 };
 
@@ -53,10 +53,22 @@ export default class Task extends BaseEntity {
     this.expectedTime = expectedTime ?? null;
     if (subtasks != null) this.subtasks = subtasks;
   }
+
+  static convert(t: Task): TaskType {
+    // TODO: Initialize this with the appropriate values
+    const subtasks: string[] = [];
+    // TODO: We need to serialize these so that they can be used in redux
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { updatedAt, createdAt, ...task } = t;
+    return {
+      ...task,
+      subtasks,
+    } as TaskType;
+  }
 }
 
 export type TaskType = {
-  id?: string;
+  id: string;
   taskName: string;
   taskDescription: string;
   taskLinks: string[];
@@ -65,4 +77,8 @@ export type TaskType = {
   finished: boolean;
   dueDate: Date | null;
   expectedTime: number | null;
+  // Auto generated
+  // createdAt?: Date | null;
+  // updatedAt?: Date | null;
+  // _id?: string | null;
 };

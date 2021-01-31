@@ -16,7 +16,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import Database from './util/Database';
-import { TasksStateType } from './controller/reducers/tasksReducer';
+import Task from './entities/Task';
 
 export default class AppUpdater {
   constructor() {
@@ -142,10 +142,11 @@ app.on('activate', () => {
 ipcMain.on('fetch-storage', async (event) => {
   console.log('IPC: "fetching-storage" event');
   const tasks = await db.getAllTasks();
-  event.reply('fetch-storage-reply', tasks);
+  const tasksConv = tasks?.map(Task.convert);
+  event.reply('fetch-storage-reply', tasksConv);
 });
 
-ipcMain.on('write-storage', (_, arg: TasksStateType) => {
-  console.log('IPC: "write-storage" event');
+ipcMain.on('add-new-task', (_, arg: Task | Task[]) => {
+  console.log('IPC: "add-new-task" event');
   db.addTasks(arg);
 });

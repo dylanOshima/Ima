@@ -38,6 +38,7 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
   function parseElement<T>(
     el: HTMLInputElement,
     initialTask: T
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): null | [keyof T, any] {
     if (el.tagName === 'DIV') {
       const nextEl = el.querySelector('input');

@@ -6,7 +6,7 @@ import {
   MikroORM,
   EntityManager,
 } from '@mikro-orm/core';
-import Task, { TaskType } from '../entities/Task';
+import Task from '../entities/Task';
 
 type StoreType = {
   storageFolderName: string;
@@ -54,15 +54,8 @@ class Database {
    * TODO: Add the subtask parsing.
    * @param data the task(s) to be added to the database. Already formatted.
    */
-  addTasks(data: TaskType | TaskType[]) {
-    let tasks;
-    if (Array.isArray(data)) {
-      tasks = data.map(({ subtasks, ...t }) => new Task(t));
-    } else {
-      const { subtasks, ...t } = data;
-      tasks = new Task(t);
-    }
-    return this.em?.persistAndFlush(tasks);
+  addTasks(data: Task | Task[]) {
+    return this.em?.persistAndFlush(data);
   }
 }
 
