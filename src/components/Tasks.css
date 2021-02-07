@@ -33,3 +33,28 @@
   opacity: 0.75;
   text-align: center;
 }
+
+/* SMALL SCREEN */
+@media (max-width: 400px) {
+  .wrapper {
+    margin-top: 1rem;
+  }
+
+  .date {
+    margin-bottom: 2rem;
+  }
+
+  .text_full_date {
+    font-size: 1rem;
+  }
+
+  .tasks {
+    width: 80vw;
+  }
+
+  .task_header {
+    font-size: 1.75rem;
+    line-height: 1.5rem;
+    letter-spacing: inherit;
+  }
+}

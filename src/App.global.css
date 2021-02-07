@@ -1,5 +1,7 @@
 /*
-  Two major screens: large and task list
+  Two major screens:
+    > large
+    > small (300px to 400px)
 
   Fonts:
     > font-family: 'Bebas Neue', cursive;
@@ -100,4 +102,40 @@ button.plain-button {
   background-color: inherit;
   margin: 0;
   padding: 0;
+}
+
+/* SMALL SCREEN */
+@media (max-width: 400px) {
+  body,
+  #root,
+  .header {
+    font-size: 12px;
+    min-width: 280px;
+  }
+
+  h2 {
+    margin: 1rem auto 0.5rem auto;
+    font-size: 3rem;
+    line-height: 1rem;
+    letter-spacing: 0.5rem;
+  }
+
+  .header {
+    position: initial;
+    margin-top: 2rem;
+  }
+
+  .logo {
+    font-size: 1rem;
+    margin-left: 1rem;
+  }
+  .menu {
+    font-size: 1rem;
+    margin-right: 1rem;
+  }
+
+  .center {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
 }
