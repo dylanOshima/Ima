@@ -5,8 +5,9 @@ import {
   IDatabaseDriver,
   MikroORM,
   EntityManager,
+  wrap,
 } from '@mikro-orm/core';
-import Task from '../entities/Task';
+import Task, { TaskType } from '../entities/Task';
 
 type StoreType = {
   storageFolderName: string;
@@ -56,6 +57,18 @@ class Database {
    */
   addTasks(data: Task | Task[]) {
     return this.em?.persistAndFlush(data);
+  }
+
+  async updateTask(data: TaskType) {
+    const task = await this.em?.findOne(Task, { id: data.id });
+    if (task == null)
+      console.error(
+        `Could not find task "${data.taskName}" with id: ${data.id}`
+      );
+    await wrap(task).assign({
+      finished: data.finished,
+    });
+    this.em?.flush();
   }
 }
 

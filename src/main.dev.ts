@@ -152,6 +152,7 @@ ipcMain.on('fetch-storage', async (event) => {
 });
 
 ipcMain.on(ADD_TASK_REQUEST, async (event, t: Task) => {
+  console.log(`IPC: "${ADD_TASK_REQUEST}" event`);
   const key = t.id;
   const task = new Task(t);
   await db.em?.persistAndFlush(task);
@@ -163,5 +164,5 @@ ipcMain.on(ADD_TASK_REQUEST, async (event, t: Task) => {
 
 ipcMain.on(UPDATE_TASK_REQUEST, async (_, task: TaskType) => {
   console.log(`IPC: "${UPDATE_TASK_REQUEST}" event`);
-  db.em?.persistAndFlush(task);
+  db.updateTask(task);
 });
