@@ -14,7 +14,9 @@ function Tasks() {
       <div className={style.task_header}>Today's Tasks:</div>
       <div className={style.task_list}>
         {tasks.length !== 0 ? (
-          tasks.map((task: TaskType) => <Task key={task.id} {...task} />)
+          tasks
+            .filter((task: TaskType) => !task.finished)
+            .map((task: TaskType) => <Task key={task.id} {...task} />)
         ) : (
           <div className={style.empty_text}>
             <i>You have no tasks at the moment</i>{' '}
@@ -24,6 +26,14 @@ function Tasks() {
             !
           </div>
         )}
+      </div>
+      <div className={style.task_header}>Completed Tasks:</div>
+      <div className={style.task_list}>
+        {tasks.length !== 0
+          ? tasks
+              .filter((task: TaskType) => task.finished)
+              .map((task: TaskType) => <Task key={task.id} {...task} />)
+          : null}
       </div>
     </div>
   );
