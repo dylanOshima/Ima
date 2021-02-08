@@ -35,7 +35,7 @@
 }
 
 /* SMALL SCREEN */
-@media (max-width: 400px) {
+@media (max-width: 550px) {
   .wrapper {
     margin-top: 1rem;
   }

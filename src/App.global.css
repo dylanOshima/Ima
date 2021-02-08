@@ -1,7 +1,7 @@
 /*
   Two major screens:
     > large
-    > small (300px to 400px)
+    > small (300px to 550px)
 
   Fonts:
     > font-family: 'Bebas Neue', cursive;
@@ -109,7 +109,7 @@ button.plain-button {
 }
 
 /* SMALL SCREEN */
-@media (max-width: 400px) {
+@media (max-width: 550px) {
   body,
   #root,
   .header {

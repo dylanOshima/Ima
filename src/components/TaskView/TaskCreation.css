@@ -74,3 +74,18 @@ input.short_input {
   margin: 2rem auto 0rem auto;
   text-align: center;
 }
+
+/* SMALL SCREEN */
+@media (max-width: 550px) {
+  .title {
+    font-size: 2.75rem;
+    width: 80%;
+  }
+
+  .input_line {
+    width: 80%;
+  }
+  .input_line input {
+    width: 30%;
+  }
+}
