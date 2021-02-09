@@ -65,9 +65,7 @@ class Database {
       console.error(
         `Could not find task "${data.taskName}" with id: ${data.id}`
       );
-    await wrap(task).assign({
-      finished: data.finished,
-    });
+    await wrap(task).assign(data);
     this.em?.flush();
   }
 }

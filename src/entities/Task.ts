@@ -1,6 +1,8 @@
 import { Collection, Entity, ManyToMany, Property } from '@mikro-orm/core';
 
 import BaseEntity from './BaseEntity';
+// eslint-disable-next-line import/no-cycle
+import Tag from './Tag';
 
 type TaskConstructorArgType = Omit<TaskType, 'subtasks' | 'id'> & {
   subtasks?: Collection<Task>;
@@ -26,6 +28,9 @@ export default class Task extends BaseEntity {
   @ManyToMany(() => Task)
   subtasks = new Collection<Task>(this);
 
+  @ManyToMany(() => Tag, 'tasks', { owner: true })
+  tags = new Collection<Tag>(this);
+
   @Property()
   dueDate: Date | null;
 
@@ -40,6 +45,7 @@ export default class Task extends BaseEntity {
       value = 0,
       finished = false,
       taskLinks = [],
+      tags,
       subtasks,
       dueDate,
       expectedTime,
@@ -51,18 +57,21 @@ export default class Task extends BaseEntity {
     this.finished = finished;
     this.dueDate = dueDate ?? null;
     this.expectedTime = expectedTime ?? null;
+    if (tags != null) this.tags = new Collection<Tag>(tags);
     if (subtasks != null) this.subtasks = subtasks;
   }
 
   static convert(t: Task): TaskType {
     // TODO: Initialize this with the appropriate values
     const subtasks: string[] = [];
+    const tags: string[] = [];
     // TODO: We need to serialize these so that they can be used in redux
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { updatedAt, createdAt, ...task } = t;
     return {
       ...task,
       subtasks,
+      tags,
     } as TaskType;
   }
 }
@@ -73,6 +82,7 @@ export type TaskType = {
   taskDescription: string;
   taskLinks: string[];
   subtasks: string[];
+  tags: string[];
   value: number;
   finished: boolean;
   dueDate: Date | null;

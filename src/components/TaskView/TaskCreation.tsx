@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ipcRenderer } from 'electron';
+import { useEffect } from 'react';
 import { isPropertyOf, updateValue } from '../../util/TypeUtils';
 import {
   addTaskAction,
@@ -9,6 +11,7 @@ import { setCurrentPage } from '../../controller/reducers/pagesReducer';
 import SelectorInput from '../form/SelectorInput';
 import { RootState } from '../../controller/rootReducer';
 import type { TaskType } from '../../entities/Task';
+import { UPDATE_TASK_REQUEST } from '../../util/constants';
 
 const style = require('./TaskView.css').default;
 const inputStyle = require('./TaskCreation.css').default;
@@ -17,6 +20,7 @@ const TASK_PAYLOAD = {
   taskName: '',
   taskDescription: '',
   taskLinks: '',
+  tags: '',
   finished: false,
   value: '10',
   subtasks: null,
@@ -75,14 +79,20 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const elements = e.currentTarget.children;
+    let task;
     if (currentTask != null) {
-      const task = fetchElementData(elements, currentTask);
+      task = fetchElementData(elements, currentTask);
+      // Update store
       dispatch(editTask(task));
     } else {
-      const task = fetchElementData(elements, TASK_PAYLOAD);
+      task = fetchElementData(elements, TASK_PAYLOAD);
+      // Update store
       dispatch(addTaskAction(task));
     }
+    // Update page
     dispatch(setCurrentPage({ page: 'tasks' }));
+    // Update db
+    ipcRenderer.send(UPDATE_TASK_REQUEST, task);
   };
 
   return (

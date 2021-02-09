@@ -7,6 +7,7 @@ import { TaskType } from '../../entities/Task';
 export type TaskPayload = {
   taskName: string;
   taskDescription: string;
+  tags: string;
   finished: boolean;
   taskLinks: string | null;
   subtasks: string[] | null;
@@ -38,6 +39,7 @@ export const addTaskAction = createAction(
     taskLinks: taskLinksRaw,
     subtasks: subtasksRaw,
     value: valueRaw,
+    tags: tagsRaw,
     finished = false,
     ...otherProps
   }: TaskPayload) => {
@@ -46,6 +48,8 @@ export const addTaskAction = createAction(
       valueRaw != null && !!valueRaw.length ? parseInt(valueRaw, 10) : 0;
     // parse taskLinks
     const taskLinks = taskLinksRaw?.split(', ') ?? [];
+    // parse taskLinks
+    const tags = tagsRaw?.split(', ') ?? [];
     // parse subtasks
     const subtasks =
       subtasksRaw == null || subtasksRaw.length === 0 ? [] : subtasksRaw;
@@ -58,6 +62,7 @@ export const addTaskAction = createAction(
       taskLinks,
       subtasks,
       finished,
+      tags,
     };
     ipcRenderer.send(ADD_TASK_REQUEST, payload);
     return { payload };
