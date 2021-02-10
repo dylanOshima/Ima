@@ -3,31 +3,21 @@ import { useRef, useState } from 'react';
 
 const style = require('./selectorInput.css').default;
 
-type OptionType = {
-  id: number;
-  taskName: string;
-};
-
 interface SelectorType
   extends React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
   label: string;
-  options?: OptionType[];
+  options?: string[];
   htmlFor?: string;
 }
 
-function filterOptions<T>(
-  options: T[],
-  accessor: (option: T) => string,
-  inputStr: string
-): T[] {
+function filterOptions(options: string[], inputStr: string): string[] {
   const format = (s: string) => s.trim().toLowerCase();
   const filter = format(inputStr);
-  return options.filter((option: T) => {
-    const opt = accessor(option);
-    return format(opt).indexOf(filter) >= 0;
+  return options.filter((option) => {
+    return format(option).indexOf(filter) >= 0;
   });
 }
 
@@ -55,11 +45,7 @@ function SelectorInput({
     // only show options if user typed something
     if (inputString != null && inputString.trim().length >= 0) {
       // set options based on filter
-      const optionsFiltered = filterOptions(
-        optionsUnfiltered,
-        (opt) => opt.taskName,
-        inputString
-      );
+      const optionsFiltered = filterOptions(optionsUnfiltered, inputString);
       setOptions(optionsFiltered);
       setExpanded(true);
     } else {
@@ -70,7 +56,7 @@ function SelectorInput({
   // Selects the given option and updates the input
   const selectOption = (optionIndex: number) => {
     if (textBoxRef.current?.value != null && optionIndex < options.length) {
-      textBoxRef.current.value = options[optionIndex].taskName;
+      textBoxRef.current.value = options[optionIndex];
       setExpanded(false);
     }
   };
@@ -131,14 +117,14 @@ function SelectorInput({
               <li
                 aria-selected={index === selectedOption}
                 className={style.option}
-                data-option-value={option.id}
-                key={option.id}
+                data-option-value={option}
+                key={option}
                 tabIndex={-1}
                 role="option"
-                value={option.id}
+                value={option}
                 onMouseEnter={() => setSelectedOption(index)}
               >
-                {option.taskName}
+                {option}
               </li>
             ))}
             {/* Live Region for screen readers */}

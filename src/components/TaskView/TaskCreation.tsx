@@ -1,17 +1,22 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ipcRenderer } from 'electron';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { isPropertyOf, updateValue } from '../../util/TypeUtils';
 import {
   addTaskAction,
   editTask,
+  TasksStateType,
 } from '../../controller/reducers/tasksReducer';
 import { setCurrentPage } from '../../controller/reducers/pagesReducer';
 import SelectorInput from '../form/SelectorInput';
 import { RootState } from '../../controller/rootReducer';
 import type { TaskType } from '../../entities/Task';
-import { UPDATE_TASK_REQUEST } from '../../util/constants';
+import {
+  UPDATE_TASK_REQUEST,
+  GET_TAGS_REPLY,
+  GET_TAGS_REQUEST,
+} from '../../util/constants';
 
 const style = require('./TaskView.css').default;
 const inputStyle = require('./TaskCreation.css').default;
@@ -20,7 +25,7 @@ const TASK_PAYLOAD = {
   taskName: '',
   taskDescription: '',
   taskLinks: '',
-  tags: '',
+  tags: [''],
   finished: false,
   value: '10',
   subtasks: null,
@@ -39,8 +44,19 @@ type NewTaskPropType = {
  * correspond to the correct field in the state object.
  */
 function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
+  const tagsRef = useRef<string[]>(currentTask != null ? currentTask.tags : []);
   const dispatch = useDispatch();
-  const tasks = useSelector((state: RootState) => state.taskState);
+  const tasks: TasksStateType = useSelector(
+    (state: RootState) => state.taskState
+  );
+
+  useEffect(() => {
+    // Fetch tags
+    ipcRenderer.send(GET_TAGS_REQUEST);
+    ipcRenderer.on(GET_TAGS_REPLY, (_, tags: string[]) => {
+      tagsRef.current = tags;
+    });
+  }, []);
 
   function parseElement<T>(
     el: HTMLInputElement,
@@ -84,6 +100,8 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
       task = fetchElementData(elements, currentTask);
       // Update store
       dispatch(editTask(task));
+      // Update db
+      ipcRenderer.send(UPDATE_TASK_REQUEST, task);
     } else {
       task = fetchElementData(elements, TASK_PAYLOAD);
       // Update store
@@ -91,8 +109,6 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
     }
     // Update page
     dispatch(setCurrentPage({ page: 'tasks' }));
-    // Update db
-    ipcRenderer.send(UPDATE_TASK_REQUEST, task);
   };
 
   return (
@@ -142,7 +158,15 @@ function NewTaskWrapper({ handleSwitch, currentTask }: NewTaskPropType) {
           type="text"
           name="subtasks"
           placeholder="Sub Tasks"
-          options={tasks}
+          options={tasks.map((t) => t.taskName)}
+        />
+        <SelectorInput
+          className="form-input"
+          label="Tags:"
+          type="text"
+          name="tags"
+          placeholder={tagsRef.current.join(', ')}
+          options={tagsRef.current}
         />
         <div className={inputStyle.input_line}>
           <label htmlFor="task-links">

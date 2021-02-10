@@ -20,6 +20,8 @@ import {
   ADD_TASK_REQUEST,
   UPDATE_TASK_REPLY,
   UPDATE_TASK_REQUEST,
+  GET_TAGS_REQUEST,
+  GET_TAGS_REPLY,
 } from './util/constants';
 import Task, { TaskType } from './entities/Task';
 
@@ -147,17 +149,18 @@ app.on('activate', () => {
 ipcMain.on('fetch-storage', async (event) => {
   console.log('IPC: "fetching-storage" event');
   const tasks = await db.getAllTasks();
-  const tasksConv = tasks?.map(Task.convert);
+  if (tasks == null) throw new Error('Failed to get all tasks.');
+  const tasksConv = await Promise.all(tasks.map((task) => Task.convert(task)));
   event.reply('fetch-storage-reply', tasksConv);
 });
 
-ipcMain.on(ADD_TASK_REQUEST, async (event, t: Task) => {
+ipcMain.on(ADD_TASK_REQUEST, async (event, args) => {
   console.log(`IPC: "${ADD_TASK_REQUEST}" event`);
-  const key = t.id;
+  const { id: key, tags, ...t } = args;
   const task = new Task(t);
   await db.em?.persistAndFlush(task);
   event.reply(UPDATE_TASK_REPLY, {
-    updatedTask: Task.convert(task),
+    updatedTask: await Task.convert(task),
     key,
   });
 });
@@ -165,4 +168,13 @@ ipcMain.on(ADD_TASK_REQUEST, async (event, t: Task) => {
 ipcMain.on(UPDATE_TASK_REQUEST, async (_, task: TaskType) => {
   console.log(`IPC: "${UPDATE_TASK_REQUEST}" event`);
   db.updateTask(task);
+});
+
+ipcMain.on(GET_TAGS_REQUEST, async (event) => {
+  console.log(`IPC: "${GET_TAGS_REQUEST}" event`);
+  const tags = await db.getAllTags();
+  event.reply(
+    GET_TAGS_REPLY,
+    tags?.map((tag) => tag.name)
+  );
 });

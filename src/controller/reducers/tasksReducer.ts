@@ -7,7 +7,7 @@ import { TaskType } from '../../entities/Task';
 export type TaskPayload = {
   taskName: string;
   taskDescription: string;
-  tags: string;
+  tags: string[];
   finished: boolean;
   taskLinks: string | null;
   subtasks: string[] | null;
@@ -49,7 +49,7 @@ export const addTaskAction = createAction(
     // parse taskLinks
     const taskLinks = taskLinksRaw?.split(', ') ?? [];
     // parse taskLinks
-    const tags = tagsRaw?.split(', ') ?? [];
+    const tags = tagsRaw ?? [];
     // parse subtasks
     const subtasks =
       subtasksRaw == null || subtasksRaw.length === 0 ? [] : subtasksRaw;

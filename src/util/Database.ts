@@ -8,6 +8,7 @@ import {
   wrap,
 } from '@mikro-orm/core';
 import Task, { TaskType } from '../entities/Task';
+import Tag from '../entities/Tag';
 
 type StoreType = {
   storageFolderName: string;
@@ -67,6 +68,10 @@ class Database {
       );
     await wrap(task).assign(data);
     this.em?.flush();
+  }
+
+  getAllTags() {
+    return this.em?.find(Tag, {});
   }
 }
 

@@ -4,8 +4,9 @@ import BaseEntity from './BaseEntity';
 // eslint-disable-next-line import/no-cycle
 import Tag from './Tag';
 
-type TaskConstructorArgType = Omit<TaskType, 'subtasks' | 'id'> & {
+type TaskConstructorArgType = Omit<TaskType, 'subtasks' | 'tags' | 'id'> & {
   subtasks?: Collection<Task>;
+  tags?: Collection<Tag>;
 };
 
 @Entity()
@@ -57,14 +58,18 @@ export default class Task extends BaseEntity {
     this.finished = finished;
     this.dueDate = dueDate ?? null;
     this.expectedTime = expectedTime ?? null;
-    if (tags != null) this.tags = new Collection<Tag>(tags);
+    if (tags != null) this.tags = tags;
     if (subtasks != null) this.subtasks = subtasks;
   }
 
-  static convert(t: Task): TaskType {
+  static async convert(t: Task): Promise<TaskType> {
     // TODO: Initialize this with the appropriate values
     const subtasks: string[] = [];
     const tags: string[] = [];
+    if (!t.tags.isInitialized()) await t.tags.init();
+    t.tags.getItems().forEach((tag) => {
+      tags.push(tag.name);
+    });
     // TODO: We need to serialize these so that they can be used in redux
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { updatedAt, createdAt, ...task } = t;

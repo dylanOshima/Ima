@@ -23,6 +23,7 @@ function TaskView({ handleSwitch, ...currentTask }: TaskViewType) {
     taskName,
     taskDescription,
     taskLinks,
+    tags,
     subtasks,
     value,
     finished,
@@ -66,6 +67,11 @@ function TaskView({ handleSwitch, ...currentTask }: TaskViewType) {
       <div className={style.input_line}>
         <span className={style.input_short}>
           Duration: {expectedTime == null ? 0 : expectedTime} minutes
+        </span>
+      </div>
+      <div className={style.input_line}>
+        <span>
+          Tags: {tags == null || tags.length === 0 ? 'None' : tags.join(', ')}
         </span>
       </div>
       <div className={style.input_line}>
